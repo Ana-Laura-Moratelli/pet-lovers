@@ -60,8 +60,14 @@ export default class CadastroProdutoConsumido {
                 if (indiceProduto >= 0 && indiceProduto < this.produtosDisponiveis.length) {
                     let produto = this.produtosDisponiveis[indiceProduto];
                     let quantidadeDisponivel = produto.quantidade; 
-    
-                    let quantidade: number = this.entrada.receberNumero("Digite a quantidade consumida: ");
+
+                    let quantidade: number;
+                    do {
+                        quantidade = this.entrada.receberNumero("Digite a quantidade consumida: ");
+                        if (quantidade <= 0) {
+                            console.log("A quantidade consumida deve ser maior que zero. Por favor, digite novamente.");
+                        }
+                    } while (quantidade <= 0);
     
                     if (quantidade <= quantidadeDisponivel) {
                         cliente.cadastrarProdutoConsumido(produto, quantidade, pet);

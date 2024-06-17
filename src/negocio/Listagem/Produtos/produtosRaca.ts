@@ -11,6 +11,7 @@ export default class ListagemProdutosMaisConsumidosPorRaca {
         console.log("\nProdutos mais consumidos por raça de Pet:");
 
         const produtosPorRaca = new Map<string, Map<string, number>>();
+        let encontrouProdutos = false;
 
         this.clientes.forEach(cliente => {
             cliente.getPets().forEach(pet => {
@@ -31,18 +32,20 @@ export default class ListagemProdutosMaisConsumidosPorRaca {
             });
         });
 
-        if (produtosPorRaca.size === 0) {
-            console.log(`\nNão há produtos consumidos por raça de Pet.\n`);
-            return;
-        }
-
         produtosPorRaca.forEach((quantidadesPorProduto, raca) => {
-            console.log(`\nRaça: ${raca}`);
-            const produtosOrdenados = Array.from(quantidadesPorProduto.entries()).sort((a, b) => b[1] - a[1]);
+            if (quantidadesPorProduto.size > 0) {
+                encontrouProdutos = true;
+                console.log(`\nRaça: ${raca}`);
+                const produtosOrdenados = Array.from(quantidadesPorProduto.entries()).sort((a, b) => b[1] - a[1]);
 
-            produtosOrdenados.forEach(([produtoNome, quantidade]) => {
-                console.log(`- ${produtoNome}: ${quantidade} unidades`);
-            });
+                produtosOrdenados.forEach(([produtoNome, quantidade]) => {
+                    console.log(`- ${produtoNome}: ${quantidade} unidades`);
+                });
+            }
         });
+
+        if (!encontrouProdutos) {
+            console.log(`\nNão há produtos consumidos por raça de Pet.\n`);
+        }
     }
 }

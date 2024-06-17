@@ -11,10 +11,11 @@ export default class ListagemProdutosMaisConsumidosPorTipoPet {
         console.log("\nProdutos mais consumidos por tipo de Pet:");
 
         const produtosPorTipo = new Map<string, Map<string, number>>();
+        let encontrouProdutos = false;
 
         this.clientes.forEach(cliente => {
             cliente.getPets().forEach(pet => {
-                const tipo = pet.getTipo; 
+                const tipo = pet.getTipo;
                 console.log(`Processando tipo: ${tipo}`);
 
                 let produtosConsumidosPorTipo = produtosPorTipo.get(tipo);
@@ -33,18 +34,20 @@ export default class ListagemProdutosMaisConsumidosPorTipoPet {
             });
         });
 
-        if (produtosPorTipo.size === 0) {
-            console.log(`\nNão há produtos consumidos por tipo de Pet.\n`);
-            return;
-        }
-
         produtosPorTipo.forEach((quantidadesPorProduto, tipo) => {
-            console.log(`\nTipo: ${tipo}`);
-            const produtosOrdenados = Array.from(quantidadesPorProduto.entries()).sort((a, b) => b[1] - a[1]);
+            if (quantidadesPorProduto.size > 0) {
+                encontrouProdutos = true;
+                console.log(`\nTipo: ${tipo}`);
+                const produtosOrdenados = Array.from(quantidadesPorProduto.entries()).sort((a, b) => b[1] - a[1]);
 
-            produtosOrdenados.forEach(([produtoNome, quantidade]) => {
-                console.log(`- ${produtoNome}: ${quantidade} unidades`);
-            });
+                produtosOrdenados.forEach(([produtoNome, quantidade]) => {
+                    console.log(`- ${produtoNome}: ${quantidade} unidades`);
+                });
+            }
         });
+
+        if (!encontrouProdutos) {
+            console.log(`\nNão há produtos consumidos por tipo de Pet.\n`);
+        }
     }
 }
