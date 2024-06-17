@@ -72,8 +72,8 @@ export default class ListaCliente extends Component<Props> {
                     {produtos.map((produto, index) => (
                         <button key={index} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                            <div className="d-flex flex-column">
-                            <span>Produto: {produto.nome}</span>
-                            <span>Tipo: {produto.tipo}</span> 
+                            <span>{produto.nome}</span>
+                            <span>Tipo: {produto.tipo}</span>
                         </div>
                         <span className="ms-auto">Quantidade: {produto.quantidade}</span>
                         </button>
@@ -84,8 +84,8 @@ export default class ListaCliente extends Component<Props> {
                     {produtos.map((produto, index) => (
                         <button key={index} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                            <div className="d-flex flex-column">
-                            <span>Produto: {produto.nome}</span>
-                            <span>Raça: {produto.raca}</span> 
+                            <span>{produto.nome}</span>
+                            <span>Tipo: {produto.raca}</span>
                         </div>
                         <span className="ms-auto">Quantidade: {produto.quantidade}</span>
                         </button>
