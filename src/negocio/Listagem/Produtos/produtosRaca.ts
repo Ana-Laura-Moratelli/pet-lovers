@@ -1,0 +1,48 @@
+import Cliente from "../../../modelo/cliente";
+
+export default class ListagemProdutosMaisConsumidosPorRaca {
+    private clientes: Array<Cliente>;
+
+    constructor(clientes: Array<Cliente>) {
+        this.clientes = clientes;
+    }
+
+    public listarProdutosMaisConsumidosPorRaca(): void {
+        console.log("\nProdutos mais consumidos por raça de Pet:");
+
+        const produtosPorRaca = new Map<string, Map<string, number>>();
+
+        this.clientes.forEach(cliente => {
+            cliente.getPets().forEach(pet => {
+                const raca = pet.getRaca;
+                let produtosConsumidosPorRaca = produtosPorRaca.get(raca);
+
+                if (!produtosConsumidosPorRaca) {
+                    produtosConsumidosPorRaca = new Map<string, number>();
+                    produtosPorRaca.set(raca, produtosConsumidosPorRaca);
+                }
+
+                cliente.getProdutosConsumidosPorPet(pet).forEach(({ produto, quantidade }) => {
+                    if (!produtosConsumidosPorRaca.has(produto.nome)) {
+                        produtosConsumidosPorRaca.set(produto.nome, 0);
+                    }
+                    produtosConsumidosPorRaca.set(produto.nome, produtosConsumidosPorRaca.get(produto.nome)! + quantidade);
+                });
+            });
+        });
+
+        if (produtosPorRaca.size === 0) {
+            console.log(`\nNão há produtos consumidos por raça de Pet.\n`);
+            return;
+        }
+
+        produtosPorRaca.forEach((quantidadesPorProduto, raca) => {
+            console.log(`\nRaça: ${raca}`);
+            const produtosOrdenados = Array.from(quantidadesPorProduto.entries()).sort((a, b) => b[1] - a[1]);
+
+            produtosOrdenados.forEach(([produtoNome, quantidade]) => {
+                console.log(`- ${produtoNome}: ${quantidade} unidades`);
+            });
+        });
+    }
+}
