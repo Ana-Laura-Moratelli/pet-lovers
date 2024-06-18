@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",                          // Ajuste conforme necessário
+    "module": "commonjs",                     // Ajuste conforme necessário
+    "strict": true,                           // Habilitar verificações estritas
+    "esModuleInterop": true,                  // Habilitar interoperabilidade com ES Modules
+    "skipLibCheck": true,                     // Pular verificação de bibliotecas
+    "forceConsistentCasingInFileNames": true, // Forçar diferenciação de maiúsculas/minúsculas em nomes de arquivos
+    "jsx": "react",                           // Configurar JSX para React
+    "moduleResolution": "node",               // Resolver módulos como Node.js
+    "allowJs": true,                          // Permitir arquivos JavaScript
+    "checkJs": true                           // Verificar arquivos JavaScript
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

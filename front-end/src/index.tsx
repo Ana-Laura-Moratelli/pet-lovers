@@ -1,32 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {RouterProvider,createBrowserRouter} from "react-router-dom";
-import Painel from './componentes/painel';
+import ReactDOM from 'react-dom/client';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-import VerCliente from './componentes/detalhesCliente';
-import FormularioClienteEditar from './componentes/atualizarCliente';
+import Roteador from './componentes/roteador';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Painel textoApp='Pet Lovers'/>,
-  },
-  {
-    path: "/cliente/:id",
-    element: <VerCliente />,
-  },
-  {
-    path: "/cliente/editar/:id",
-    element: <FormularioClienteEditar />
-  }
- 
-]);
-
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Roteador />
+  </React.StrictMode>
 );
 
 reportWebVitals();
