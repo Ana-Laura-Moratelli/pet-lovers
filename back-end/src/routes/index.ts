@@ -10,7 +10,7 @@ import CadastroServicoConsumido from '../negocio/Servico/cadastroServicoConsumid
 const router = Router();
 let empresa = new Empresa();
 
-const cadastroPet = new CadastroPet([], empresa.getClientes); 
+const cadastroPet = new CadastroPet([], () => empresa.getClientes);
 const cadastroProduto = new CadastroProduto(empresa.getProdutos);
 const cadastroProdutoConsumido = new CadastroProdutoConsumido(empresa.getProdutos);
 const cadastroServico = new CadastroServico(empresa.getServicos);
@@ -44,7 +44,22 @@ router.get('/clientes/:id', (req, res) => {
 
 router.post('/clientes/excluir/:id', (req, res) => {
     const { id } = req.params;
-    empresa.removerCliente(parseInt(id));
+    const clienteId = parseInt(id);
+
+    // Verificar se o cliente existe
+    const cliente = empresa.getClientes.find(cliente => cliente.id === clienteId);
+    if (!cliente) {
+        return res.status(404).json({ error: 'Cliente não encontrado' });
+    }
+
+    // Remover pets vinculados
+    const petsVinculados = cliente.getPets();
+    petsVinculados.forEach(pet => {
+        cadastroPet.excluirPet(pet.id);
+    });
+
+    // Remover cliente
+    empresa.removerCliente(clienteId);
     res.status(200).json(empresa.getClientes);
 });
 
@@ -83,12 +98,24 @@ router.get('/pets', (req: Request, res: Response) => {
     res.json(pets);
 });
 
-router.post('/pets', (req: Request, res: Response) => {
+router.post('/pets', async (req: Request, res: Response) => {
     const { nome, tipo, raca, genero, clienteId } = req.body;
-    cadastroPet.cadastrar(nome, tipo, raca, genero, clienteId)
-        .then(() => res.status(201).send("Pet cadastrado com sucesso!"))
-        .catch(error => res.status(400).send(error.message));
+
+    try {
+        const cliente = empresa.getClientes.find(cliente => cliente.id === parseInt(clienteId));
+
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente não encontrado' });
+        }
+
+        await cadastroPet.cadastrar(nome, tipo, raca, genero, clienteId);
+        res.status(201).send("Pet cadastrado com sucesso!");
+    } catch (error) {
+        console.error('Erro ao cadastrar pet:', error);
+        res.status(400).send('erro');
+    }
 });
+
 
 router.post('/pets/excluir/:id', (req: Request, res: Response) => {
     const { id } = req.params;

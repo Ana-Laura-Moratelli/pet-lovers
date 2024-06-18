@@ -98,6 +98,7 @@ export default class ListaPet extends Component<Props, State> {
         }
 
         const petData = { nome, tipo, raca, genero, clienteId: Number(clienteId) };
+        console.log('Dados enviados para o backend:', petData); // Log para depuração
         axios.post('http://localhost:5000/pets', petData)
             .then(response => {
                 this.fetchPets();
@@ -117,6 +118,7 @@ export default class ListaPet extends Component<Props, State> {
                 alert("Erro ao cadastrar pet. Tente novamente.");
             });
     };
+
 
     handleEditClick = (id: number) => {
         this.setState(prevState => ({

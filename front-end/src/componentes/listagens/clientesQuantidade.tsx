@@ -82,8 +82,7 @@ export default class ListaConsumidos extends Component<Props, State> {
     fetchProdutos = () => {
         axios.get('http://localhost:5000/produtos')
             .then(response => {
-                this.setState({ produtos: response.data });
-                console.log('Produtos:', response.data);
+                this.setState({ produtos: response.data }, this.removeInvalidProdutosConsumidos);
             })
             .catch(error => console.error('Erro ao buscar produtos:', error));
     }
@@ -91,10 +90,18 @@ export default class ListaConsumidos extends Component<Props, State> {
     fetchProdutosConsumidos = () => {
         axios.get('http://localhost:5000/produtos-consumidos')
             .then(response => {
-                this.setState({ produtosConsumidos: response.data });
-                console.log('Produtos Consumidos:', response.data);
+                this.setState({ produtosConsumidos: response.data }, this.removeInvalidProdutosConsumidos);
             })
             .catch(error => console.error('Erro ao buscar produtos consumidos:', error));
+    }
+
+    removeInvalidProdutosConsumidos = () => {
+        const { produtos, produtosConsumidos } = this.state;
+        const validProdutoIds = new Set(produtos.map(produto => produto.id));
+        const filteredProdutosConsumidos = produtosConsumidos.filter(pc => validProdutoIds.has(pc.produtoId));
+        if (filteredProdutosConsumidos.length !== produtosConsumidos.length) {
+            this.setState({ produtosConsumidos: filteredProdutosConsumidos });
+        }
     }
 
     getTop10Clientes = (): ClienteConsumido[] => {

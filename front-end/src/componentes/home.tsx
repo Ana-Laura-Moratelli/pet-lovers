@@ -15,6 +15,7 @@ type RgInfo = {
 
 type Pet = {
     id: number;
+    clienteId: number;
     nome: string;
     tipo: string;
     raca: string;
@@ -30,7 +31,6 @@ type ProdutoConsumido = {
 type ServicoConsumido = {
     id: number;
     nome: string;
-    quantidade: number;
 };
 
 type Cliente = {
@@ -94,6 +94,8 @@ class ListaCliente extends Component<Props, State> {
     fetchPetsAndProducts = () => {
         const { clientes } = this.state;
 
+        
+    
         clientes.forEach(cliente => {
             axios.get(`http://localhost:5000/clientes/${cliente.id}/pets`)
                 .then(response => {
@@ -129,6 +131,20 @@ class ListaCliente extends Component<Props, State> {
                 });
         });
     };
+
+    fetchPets = () => {
+        axios.get('http://localhost:5000/pets')
+            .then(response => {
+                const pets = response.data;
+                this.setState(prevState => ({
+                    clientes: prevState.clientes.map(cliente => ({
+                        ...cliente,
+                        pets: pets.filter((pet: Pet) => pet.clienteId === cliente.id)
+                    }))
+                }));
+            })
+            .catch(error => console.error('Erro ao buscar pets:', error));
+    }
 
     handleEditClick = (id: number) => {
         this.setState(prevState => ({
@@ -198,15 +214,22 @@ class ListaCliente extends Component<Props, State> {
 
     removerCliente = (cliente: Cliente) => {
         let id = cliente.id;
-        axios.post(`http://localhost:5000/clientes/excluir/${id}`)
-            .then((response) => {
-                this.setState({ clientes: response.data });
-                alert("Cliente excluído com sucesso.");
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if (window.confirm("Tem certeza que deseja remover este cliente? Isso irá excluir os pets vinculados também.")) {
+            axios.post(`http://localhost:5000/clientes/excluir/${id}`)
+                .then((response) => {
+                    this.setState({ clientes: response.data });
+                    alert("Cliente excluído com sucesso.");
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data) {
+                        alert(error.response.data.error);
+                    } else {
+                        console.log(error);
+                    }
+                });
+        }
     };
+    
 
     handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, clienteId: number) => {
         event.preventDefault();

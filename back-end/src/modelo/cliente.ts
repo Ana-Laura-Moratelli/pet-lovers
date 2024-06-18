@@ -69,6 +69,8 @@ export default class Cliente {
     public getPets(): Array<Pet> {
         return this.pets;
     }
+
+    
     public setPets(pets: Array<Pet>): void {
         this.pets = pets;
     }
