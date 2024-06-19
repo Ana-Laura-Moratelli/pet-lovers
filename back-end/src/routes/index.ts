@@ -55,7 +55,7 @@ router.post('/clientes/excluir/:id', (req, res) => {
     // Remover pets vinculados
     const petsVinculados = cliente.getPets();
     petsVinculados.forEach(pet => {
-        cadastroPet.excluirPet(pet.id);
+        cadastroPet.deletarPet(pet.id);
     });
 
     // Remover cliente
@@ -119,7 +119,7 @@ router.post('/pets', async (req: Request, res: Response) => {
 
 router.post('/pets/excluir/:id', (req: Request, res: Response) => {
     const { id } = req.params;
-    cadastroPet.excluirPet(parseInt(id));
+    cadastroPet.deletarPet(parseInt(id));
     res.status(200).json(cadastroPet.listarPets().map(p => ({
         id: p.pet.id,
         nome: p.pet.getNome,

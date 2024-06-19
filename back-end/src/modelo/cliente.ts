@@ -82,12 +82,10 @@ export default class Cliente {
     public adicionarPet(pet: Pet): void {
         this.pets.push(pet);
     }
-    public deletarPet(indice: number): Pet | null {
-        if (indice >= 0 && indice < this.pets.length) {
-            return this.pets.splice(indice, 1)[0];
-        }
-        return null;
+    public deletarPet(pet: Pet): void {
+        this.pets = this.pets.filter(p => p.id !== pet.id);
     }
+
     public atualizarPet(pet: Pet): void {
     
     }

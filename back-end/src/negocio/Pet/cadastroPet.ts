@@ -31,10 +31,22 @@ export default class CadastroPet {
         });
     }
 
-    public excluirPet(id: number) {
-        this.pets = this.pets.filter(pet => pet.id !== id);
-    }
+    public deletarPet(id: number): boolean {
+        const petIndex = this.pets.findIndex(pet => pet.id === id);
+        if (petIndex === -1) {
+            return false;
+        }
 
+        const pet = this.pets[petIndex];
+        this.pets.splice(petIndex, 1);
+
+        const cliente = this.getClientes().find(c => c.getPets().includes(pet));
+        if (cliente) {
+            cliente.deletarPet(pet);
+        }
+
+        return true;
+    }
     public atualizarPet(id: number, nome: string, tipo: string, raca: string, genero: string): void {
         const pet = this.pets.find(pet => pet.id === id);
         if (pet) {
